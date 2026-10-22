@@ -1,0 +1,12 @@
+[project]
+name = "rgbd-perception-reaching"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "matplotlib>=3.11.2",
+    "numpy>=2.4.6",
+    "pybullet>=3.2.7",
+    "pytest>=9.1.1",
+]
