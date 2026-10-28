@@ -98,6 +98,10 @@ try:
     plt.imsave(OUTPUT_DIR / "rgb.png", rgb)
     plt.imsave(OUTPUT_DIR / "depth.png", depth_m, cmap="gray")
     np.save(OUTPUT_DIR / "depth_m.npy", depth_m)
+    np.save(
+    OUTPUT_DIR / "view_matrix.npy",
+    np.asarray(view, dtype=float),
+)
 
     cube_mask = segmentation == cube_id
     plt.imsave(
