@@ -45,7 +45,9 @@ try:
         p.stepSimulation()
 
     # Ground Truth: 시뮬레이터가 알고 있는 실제 큐브 중심 위치
-    gt_pos, _ = p.getBasePositionAndOrientation(cube_id)
+    # gt_pos는 큐브 중심의 world 좌표
+    # gt_orn은 큐브의 회전 방향을 나타내는 quaternion
+    gt_pos, gt_orn = p.getBasePositionAndOrientation(cube_id)
 
     # 4. 위에서 내려다보는 가상 카메라 설정
     width, height = 320, 240
@@ -112,6 +114,22 @@ try:
         vmax=1,
     )
     np.save(OUTPUT_DIR / "gt_position.npy", np.array(gt_pos))
+
+    # Ground Truth of the cube's top-face center
+    R_world_from_body = np.asarray(
+        p.getMatrixFromQuaternion(gt_orn)
+    ).reshape(3, 3)
+
+    gt_top = np.asarray(gt_pos) + (
+        R_world_from_body
+        @ np.array([0.0, 0.0, CUBE_HALF])
+    )
+
+    np.save(
+        OUTPUT_DIR / "gt_top_position.npy",
+        gt_top,
+    )
+
 
     # 8. 결과 출력과 검증
     print("RGB shape:", rgb.shape)
