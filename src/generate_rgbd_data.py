@@ -1,5 +1,6 @@
 """Week 0: PyBullet 장면을 만들고 RGB / Depth / Segmentation / GT 좌표를 저장한다."""
 
+from argparse import ArgumentParser
 from pathlib import Path
 
 import matplotlib
@@ -10,11 +11,54 @@ import pybullet as p # 시뮬레이터
 import pybullet_data
 
 # 결과를 저장할 폴더: 프로젝트 루트의 outputs/
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "outputs"
-OUTPUT_DIR.mkdir(exist_ok=True)
+# OUTPUT_DIR = Path(__file__).resolve().parent.parent / "outputs"
+# OUTPUT_DIR.mkdir(exist_ok=True)
 
-CUBE_HALF = 0.025                    # 큐브 한 변 5cm → 절반 2.5cm
-CUBE_START = [0.10, 0.05, CUBE_HALF]  # 바닥 위에 놓인 위치 (World 좌표, m)
+# CUBE_HALF = 0.025                    # 큐브 한 변 5cm → 절반 2.5cm
+# CUBE_START = [0.10, 0.05, CUBE_HALF]  # 바닥 위에 놓인 위치 (World 좌표, m)
+
+
+# 1. Default output directory
+ROOT_DIR = Path(__file__).resolve().parent.parent
+DEFAULT_OUTPUT_DIR = ROOT_DIR / "outputs"
+
+# 2. Command-line arguments
+parser = ArgumentParser(
+    description="Generate an RGB-D scene at a specified cube position"
+)
+
+parser.add_argument(
+    "--x",
+    type=float,
+    default=0.10,
+    help="Cube World X position in meters",
+)
+
+parser.add_argument(
+    "--y",
+    type=float,
+    default=0.05,
+    help="Cube World Y position in meters",
+)
+
+parser.add_argument(
+    "--output-dir",
+    type=Path,
+    default=DEFAULT_OUTPUT_DIR,
+    help="Directory to save RGB-D and GT data",
+)
+
+args = parser.parse_args()
+
+# 3. Output directory
+OUTPUT_DIR = args.output_dir
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+# 4. Cube parameters
+CUBE_HALF = 0.025
+CUBE_START = [args.x, args.y, CUBE_HALF]
+
+
 
 client = p.connect(p.DIRECT)  # 창 없이 실행하는 모드
 try:
