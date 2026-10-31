@@ -1,5 +1,5 @@
 
-"""Summarize and visualize Day 6 ablation results."""
+"""Summarize and visualize localization ablation results."""
 
 import csv
 from pathlib import Path
@@ -12,8 +12,8 @@ import numpy as np
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 OUTPUT_DIR = ROOT_DIR / "outputs"
-INPUT_CSV = OUTPUT_DIR / "day6_ablation.csv"
-SUMMARY_CSV = OUTPUT_DIR / "day6_ablation_summary.csv"
+INPUT_CSV = OUTPUT_DIR / "localization_ablation.csv"
+SUMMARY_CSV = OUTPUT_DIR / "localization_ablation_summary.csv"
 
 VARIANTS = "ABCDEFGH"
 
@@ -148,12 +148,12 @@ def main():
     ax.bar(labels, means)
     ax.set_ylabel("Mean 3D error (mm)")
     ax.set_xlabel("Ablation variant")
-    ax.set_title("Day 6: Ablation Mean Error")
+    ax.set_title("Localization Ablation: Mean 3D Error")
     ax.grid(axis="y", alpha=0.3)
 
     fig.tight_layout()
     fig.savefig(
-        OUTPUT_DIR / "day6_ablation_means.png",
+        OUTPUT_DIR / "localization_ablation_means.png",
         dpi=150,
     )
     plt.close(fig)
@@ -189,7 +189,7 @@ def main():
 
     fig.tight_layout()
     fig.savefig(
-        OUTPUT_DIR / "day6_paired_errors.png",
+        OUTPUT_DIR / "localization_paired_errors.png",
         dpi=150,
     )
     plt.close(fig)
@@ -234,7 +234,7 @@ def main():
 
     fig.tight_layout()
     fig.savefig(
-        OUTPUT_DIR / "day6_xyz_bias.png",
+        OUTPUT_DIR / "localization_xyz_bias.png",
         dpi=150,
     )
     plt.close(fig)
@@ -252,10 +252,10 @@ def main():
     print(f"Mean error reduction: {reduction:.2f}%")
 
     print("\nSaved:")
-    print("outputs/day6_ablation_summary.csv")
-    print("outputs/day6_ablation_means.png")
-    print("outputs/day6_paired_errors.png")
-    print("outputs/day6_xyz_bias.png")
+    print("outputs/localization_ablation_summary.csv")
+    print("outputs/localization_ablation_means.png")
+    print("outputs/localization_paired_errors.png")
+    print("outputs/localization_xyz_bias.png")
 
 
 if __name__ == "__main__":

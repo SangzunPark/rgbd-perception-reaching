@@ -25,7 +25,7 @@ from src.generate_trials import POSITIONS
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 TRIAL_ROOT = ROOT_DIR / "outputs" / "trials"
-CSV_PATH = ROOT_DIR / "outputs" / "day6_ablation.csv"
+CSV_PATH = ROOT_DIR / "outputs" / "localization_ablation.csv"
 
 DEPTH_TOLERANCE_M = 0.001
 

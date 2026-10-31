@@ -1,4 +1,4 @@
-# Day 6 — RGB-D Localization Error Diagnosis and Improvement
+# RGB-D Localization Error Diagnosis and Ablation Study
 
 ## Objective
 
