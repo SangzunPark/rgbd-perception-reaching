@@ -11,5 +11,4 @@ wheels/
 .venv
 outputs/*.npy
 outputs/trials/
-
-
+outputs/generalization/

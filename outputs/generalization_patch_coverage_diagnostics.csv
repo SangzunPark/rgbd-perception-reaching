@@ -1,0 +1,97 @@
+group,position_id,camera_name,outcome,error_3d_mm,failure_reason,valid_object_pixels,inlier_pixels,span_u_fraction,span_v_fraction,bbox_fill_fraction,occupied_quadrants,centroid_shift_from_rgb_px,candidate_u,candidate_v,candidate_gt_center_error_px,signed_depth_residual_mm
+interpolation,interpolation_01,overhead,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_01,oblique_x,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_01,oblique_y,rejected,,Insufficient valid object depth,4,4,0.08333333333333333,0.36363636363636365,1.0,1,6.634651086630117,149.0,120.5,6.746236146829733,4.351382609963039
+interpolation,interpolation_01,oblique_diagonal,inaccurate,15.63216817079012,,19,12,0.9166666666666666,0.8461538461538461,0.09917355371900827,3,4.431384517265379,141.58333333333334,131.41666666666666,3.213938319975058,3.2097218262135963
+interpolation,interpolation_02,overhead,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_02,oblique_x,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_02,oblique_y,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_02,oblique_diagonal,rejected,,Insufficient spatial surface coverage,15,11,0.9166666666666666,0.07692307692307693,1.0,2,5.759882018471998,154.0,122.0,6.906354120554692,27.963401906388906
+interpolation,interpolation_03,overhead,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_03,oblique_x,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_03,oblique_y,rejected,,Insufficient valid object depth,7,7,0.08333333333333333,0.6363636363636364,1.0,2,5.978681201255842,171.0,126.0,5.730656367324131,-1.8594511779550515
+interpolation,interpolation_03,oblique_diagonal,inaccurate,17.3597569631368,,23,23,1.0,1.0,0.13609467455621302,4,1.010288124882482,164.2173913043478,127.78260869565217,1.8021160284835718,15.439621888297728
+interpolation,interpolation_04,overhead,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_04,oblique_x,rejected,,Insufficient valid object depth,1,1,0.09090909090909091,0.08333333333333333,1.0,1,7.746231235940207,179.0,133.0,7.884093101357934,-6.035015000880328
+interpolation,interpolation_04,oblique_y,rejected,,Insufficient valid object depth,8,8,1.0,0.6666666666666666,0.08333333333333333,3,4.9313927174852505,180.625,126.5,4.61738472238527,-1.297766807914158
+interpolation,interpolation_04,oblique_diagonal,rejected,,Insufficient spatial surface coverage,20,11,0.9166666666666666,0.07142857142857142,1.0,2,5.885593363885044,175.0,123.0,6.862025729067631,25.048655800718024
+interpolation,interpolation_05,overhead,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_05,oblique_x,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_05,oblique_y,rejected,,Insufficient valid object depth,2,2,0.08333333333333333,0.18181818181818182,1.0,1,7.355354489718454,138.0,123.5,7.157163856377281,-5.105807724833933
+interpolation,interpolation_05,oblique_diagonal,inaccurate,10.205621718168377,,19,19,0.9166666666666666,1.0,0.13286713286713286,4,0.9672619694961927,143.21052631578948,122.36842105263158,1.286536168984958,8.703030057448213
+interpolation,interpolation_06,overhead,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_06,oblique_x,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_06,oblique_y,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_06,oblique_diagonal,rejected,,Insufficient spatial surface coverage,11,10,0.8333333333333334,0.08333333333333333,1.0,2,5.58487923849504,152.5,128.0,4.504995225888593,4.2030485050857935
+interpolation,interpolation_07,overhead,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_07,oblique_x,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_07,oblique_y,rejected,,Insufficient valid object depth,2,2,0.08333333333333333,0.18181818181818182,1.0,1,7.378048780487805,171.0,123.5,7.1248739502721605,-5.109503212810007
+interpolation,interpolation_07,oblique_diagonal,inaccurate,11.809681125163145,,23,23,1.0,1.0,0.13609467455621302,4,1.010288124882482,164.2173913043478,122.78260869565217,1.5388767418394225,9.490745671290268
+interpolation,interpolation_08,overhead,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_08,oblique_x,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_08,oblique_y,rejected,,Insufficient valid object depth,2,2,0.08333333333333333,0.18181818181818182,1.0,1,7.378048780487805,182.0,123.5,7.1583680228148365,-5.109503212810007
+interpolation,interpolation_08,oblique_diagonal,inaccurate,18.266097488060286,,18,13,1.0,0.9285714285714286,0.08333333333333333,3,4.978525775967819,174.84615384615384,128.23076923076923,3.8820093534893423,4.129953839081657
+interpolation,interpolation_09,overhead,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_09,oblique_x,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_09,oblique_y,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_09,oblique_diagonal,rejected,,Insufficient spatial surface coverage,17,10,0.7692307692307693,0.07692307692307693,1.0,2,6.201271226529072,144.5,111.0,7.213207058637755,37.74416648616208
+interpolation,interpolation_10,overhead,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_10,oblique_x,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_10,oblique_y,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_10,oblique_diagonal,inaccurate,18.460976072359692,,12,11,1.0,0.9230769230769231,0.0763888888888889,3,4.622947576726921,153.0909090909091,122.0,3.8667543943364415,4.893295251029772
+interpolation,interpolation_11,overhead,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_11,oblique_x,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_11,oblique_y,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_11,oblique_diagonal,rejected,,Insufficient spatial surface coverage,15,10,0.8333333333333334,0.07692307692307693,1.0,2,5.832444527773088,164.5,112.0,6.701999569954878,27.32123189439184
+interpolation,interpolation_12,overhead,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_12,oblique_x,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_12,oblique_y,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_12,oblique_diagonal,inaccurate,11.130908381491881,,23,23,1.0,1.0,0.14743589743589744,4,0.6243530000867533,174.7391304347826,117.78260869565217,1.3421078810743257,9.116562985080567
+interpolation,interpolation_13,overhead,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_13,oblique_x,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_13,oblique_y,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_13,oblique_diagonal,rejected,,Insufficient spatial surface coverage,13,11,0.8461538461538461,0.08333333333333333,1.0,2,5.502524673073059,142.0,117.0,4.546721821080905,4.120913304585194
+interpolation,interpolation_14,overhead,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_14,oblique_x,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_14,oblique_y,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_14,oblique_diagonal,rejected,,Insufficient spatial surface coverage,17,10,0.9090909090909091,0.07692307692307693,1.0,2,5.89885656623913,152.5,118.0,5.199552530886148,4.677283175486324
+interpolation,interpolation_15,overhead,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_15,oblique_x,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_15,oblique_y,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_15,oblique_diagonal,inaccurate,18.445142564386995,,12,12,1.0,1.0,0.08333333333333333,3,4.602233757161353,163.5,117.08333333333333,3.9368039895607914,4.97443244625928
+interpolation,interpolation_16,overhead,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_16,oblique_x,rejected,,Insufficient valid object depth,1,1,0.09090909090909091,0.08333333333333333,1.0,1,7.746231235940207,179.0,105.0,7.880264472087261,-6.035015000880328
+interpolation,interpolation_16,oblique_y,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+interpolation,interpolation_16,oblique_diagonal,rejected,,Insufficient spatial surface coverage,17,11,0.9166666666666666,0.07692307692307693,1.0,2,5.754394319149175,175.0,107.0,6.5595848200663935,26.625631161230846
+extrapolation,extrapolation_01,overhead,rejected,,Insufficient spatial surface coverage,11,11,1.0,0.08333333333333333,1.0,2,5.5,133.0,138.0,5.340094316449135,-0.000199804302658535
+extrapolation,extrapolation_01,oblique_x,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+extrapolation,extrapolation_01,oblique_y,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+extrapolation,extrapolation_01,oblique_diagonal,rejected,,Insufficient spatial surface coverage,15,10,0.8333333333333334,0.07692307692307693,1.0,2,5.968955759144428,134.5,126.0,7.281571461772099,31.700845964449552
+extrapolation,extrapolation_02,overhead,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+extrapolation,extrapolation_02,oblique_x,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+extrapolation,extrapolation_02,oblique_y,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+extrapolation,extrapolation_02,oblique_diagonal,inaccurate,20.06379628721856,,16,11,0.9166666666666666,0.9230769230769231,0.08333333333333333,3,4.966662608367567,133.0,124.0,4.172305710410439,4.570930421549102
+extrapolation,extrapolation_03,overhead,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+extrapolation,extrapolation_03,oblique_x,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+extrapolation,extrapolation_03,oblique_y,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+extrapolation,extrapolation_03,oblique_diagonal,rejected,,Insufficient valid object depth,9,9,0.8333333333333334,1.0,0.075,3,4.6346035888557635,133.11111111111111,110.77777777777777,4.318084113158822,4.315020673173797
+extrapolation,extrapolation_04,overhead,inaccurate,26.67066323861783,,22,22,1.0,1.0,0.1527777777777778,3,3.589926735254792,184.0,135.0,4.077466255416294,19.849368801120313
+extrapolation,extrapolation_04,oblique_x,rejected,,Insufficient valid object depth,2,2,0.18181818181818182,0.08333333333333333,1.0,1,6.833275295623685,181.5,127.0,6.85311744486621,52.70510314506227
+extrapolation,extrapolation_04,oblique_y,rejected,,Insufficient spatial surface coverage,12,11,0.07692307692307693,1.0,1.0,2,5.5489180265848566,193.0,130.0,5.259126646032356,-0.2619975241426875
+extrapolation,extrapolation_04,oblique_diagonal,inaccurate,19.768654613721367,,28,18,1.0,0.9285714285714286,0.11538461538461539,3,5.5234729940088485,186.16666666666666,139.72222222222223,4.215477290968865,3.2699482219398224
+extrapolation,extrapolation_05,overhead,rejected,,Insufficient spatial surface coverage,11,11,0.08333333333333333,1.0,1.0,2,5.5,192.0,119.0,4.652931275804595,-0.0012726879086155662
+extrapolation,extrapolation_05,oblique_x,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+extrapolation,extrapolation_05,oblique_y,rejected,,Insufficient spatial surface coverage,11,10,0.08333333333333333,0.8333333333333334,1.0,2,5.50252467307306,192.0,116.5,4.698339558598507,-0.17399499142212171
+extrapolation,extrapolation_05,oblique_diagonal,inaccurate,12.792515961770391,,26,26,1.0,1.0,0.16666666666666666,4,1.1734256433517745,186.34615384615384,120.46153846153847,2.0219161881177508,8.45826712270381
+extrapolation,extrapolation_06,overhead,rejected,,Insufficient spatial surface coverage,12,11,0.08333333333333333,0.9166666666666666,1.0,2,5.500631276903083,192.0,105.0,4.6641596633951945,-0.0012726879086155662
+extrapolation,extrapolation_06,oblique_x,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+extrapolation,extrapolation_06,oblique_y,rejected,,Insufficient spatial surface coverage,11,10,0.08333333333333333,0.8333333333333334,1.0,2,5.547130894167241,192.0,103.5,5.126168649812804,-0.17432654225868482
+extrapolation,extrapolation_06,oblique_diagonal,inaccurate,13.864300835689766,,23,23,1.0,1.0,0.14743589743589744,4,2.09393274829683,184.17391304347825,106.30434782608695,2.4399631734550873,8.871032081741227
+extrapolation,extrapolation_07,overhead,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+extrapolation,extrapolation_07,oblique_x,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+extrapolation,extrapolation_07,oblique_y,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+extrapolation,extrapolation_07,oblique_diagonal,rejected,,Insufficient spatial surface coverage,20,11,0.9166666666666666,0.07142857142857142,1.0,2,5.703230195798183,159.0,130.0,6.945684625539859,25.703211099106227
+extrapolation,extrapolation_08,overhead,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+extrapolation,extrapolation_08,oblique_x,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+extrapolation,extrapolation_08,oblique_y,rejected,,Insufficient valid object depth,0,0,0.0,0.0,0.0,0,,,,,
+extrapolation,extrapolation_08,oblique_diagonal,rejected,,Insufficient spatial surface coverage,11,11,1.0,0.08333333333333333,1.0,2,5.5,158.0,110.0,5.231538320547506,4.435827553469052
