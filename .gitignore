@@ -12,3 +12,6 @@ wheels/
 outputs/*.npy
 outputs/trials/
 outputs/generalization/
+
+# Generated robot-reaching sensor arrays
+outputs/robot_reaching/*.npy

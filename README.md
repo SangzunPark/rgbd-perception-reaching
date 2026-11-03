@@ -1,10 +1,10 @@
 # RGB-D Perception for Robotic Reaching
 
-**Simulation-based 3D object localization, error diagnosis, and robustness evaluation**
+**Simulation-based RGB-D localization, robustness analysis, and perception-driven robotic reaching**
 
-This project develops and evaluates an RGB-D perception pipeline that estimates the **3D World-coordinate position of a target object's top-face center** from rendered color and depth images. Starting with camera geometry and color-based object detection, the work progresses through systematic error analysis, robust depth estimation, and evaluations under unseen positions, altered camera viewpoints, and corrupted depth measurements.
+This project develops and evaluates an RGB-D perception pipeline that estimates the **3D World-coordinate position of a target object's top-face center** from rendered color and depth images. The work covers camera geometry, systematic error diagnosis, robust depth estimation, and generalization studies under unseen positions, altered viewpoints, and corrupted depth measurements.
 
-The project is intended as a reproducible, research-oriented exploration of **robot perception and 3D computer vision**. Although reaching motivates the choice of target point, the current implementation **stops at 3D target localization**: robot-arm inverse kinematics, motion planning, and reaching success have **not** yet been implemented or evaluated.
+The resulting perception system is integrated with a simulated **Franka Panda** robot using position-only inverse kinematics and joint-space position control. A single clean RGB-D scene demonstrates end-to-end perception-driven reaching. **Localization generalization and depth robustness are evaluated separately; robotic reaching across multiple scenes or corruption conditions has not yet been evaluated.**
 
 ## Highlights
 
@@ -14,47 +14,62 @@ The project is intended as a reproducible, research-oriented exploration of **ro
 - Evaluated **33 positions × 4 camera viewpoints = 132 clean scenes**. Method R returned a position within the experimental 5 mm tolerance in all 132 cases, including 96 scenes involving previously unseen positions.
 - Stress-tested the frozen methods on **4,128 clean/corrupted input scenarios**, producing **12,384 paired localization predictions** on 96 held-out position/viewpoint combinations.
 - Identified **failure mechanisms**, not just average error: nearest-depth selection biases under oblique views, inaccurate returns under severe depth dropout, and limitations of bounding-span confidence checks.
+- Integrated frozen **method R → Panda IK → simulated joint control**, achieving **2.182 mm final reaching error** in one clean scene; **119 automated tests passed** across the repository.
 
-> **Scope of the evidence:** All results come from a controlled **PyBullet TinyRenderer simulation** of one red cube. A 5 mm localization threshold is an evaluation convention, **not** a guarantee of robot safety or reaching accuracy.
+> **Scope of the evidence:** Results come from controlled **PyBullet simulations** with one 5 cm red cube. The 5 mm localization criterion is an experimental metric, not a robot safety threshold. **The 132 clean scenes and 12,384 predictions evaluate localization, whereas reaching has been demonstrated in one clean scene only.**
 
 ## Research questions
 
 1. How can RGB pixels and metric depth be transformed reliably into 3D World coordinates?
+
 2. Why do object masks, surface selection, and camera conventions introduce systematic localization error?
+
 3. How do Gaussian depth noise and missing-depth patterns affect accuracy and the ability to reject unreliable estimates?
+
 4. Does a robust localization method retain accuracy at **unseen object positions** and **oblique camera viewpoints**?
+
 5. Under what conditions does a method **return an inaccurate coordinate** instead of explicitly **rejecting** an estimate?
 
-## Perception pipeline
+6. Can the frozen RGB-D estimator drive a simulated robot toward an estimated 3D approach point, and how do perception, IK, and control errors relate to the final reaching error?
+
+## Perception-to-reaching pipeline
 
 ```text
-PyBullet RGB-D scene (5 cm red cube, known camera configuration)
-          │
-          ├── RGB image ──► red-object mask ──────────┐
-          └── depth buffer ──► metric depth image ────┤
-                                                     ▼
-                               depth-supported surface selection
-                                                     │
-                                        surface pixel (u, v)
-                                        + optical-axis depth
-                                                     │
-                                                     ▼
-                               pixel ──► optical camera 3D
-                                                     │
-                                                     ▼
-                               optical ──► OpenGL camera 3D
-                                                     │
-                                                     ▼
-                               inverse view transform ──► World 3D target
-                                                     │
-                                                     ▼
-                               Ground-truth comparison (evaluation only)
-                                                     │
-                                                     ▼
-                               accuracy, failure, and robustness analysis
+PyBullet scene: red cube + calibrated RGB-D camera
+        │
+        ├── RGB ──► red-object mask ───┐
+        └── Depth ──► metric depth ────┤
+                                      ▼
+                    Frozen method R: robust surface selection
+                                      │
+                    Pixel + depth + camera intrinsics/view
+                                      │
+                                      ▼
+                    3D top-face estimate (World frame)
+                                      │
+                       + 0.10 m World-Z offset
+                                      │
+                                      ▼
+                         Approach target (World)
+                                      │
+                                      ▼
+                        Position-only Panda IK
+                                      │
+                            Validated joint angles
+                                      │
+                                      ▼
+                       Joint-space position control
+                                      │
+                                      ▼
+                    Measured end-effector (World)
+                                      │
+                                      ▼
+            Final reaching error (evaluation with simulator GT)
+Simulator GT ──────────────────► Evaluation and diagnostics ONLY
+                               (never a perception/IK/control input)
 ```
 
-The estimator uses **RGB, metric depth, camera intrinsics, and the camera view matrix**. The simulator's true cube pose and segmentation IDs are used for **ground-truth calculation and diagnosis**, not as inputs to the color-based target detector.
+The frozen estimator uses **RGB, metric depth, camera intrinsics, and the camera view matrix**. Its optical-camera-to-World transformation is unchanged from the localization benchmarks. Simulator cube poses and segmentation IDs are **not** used as inputs to RGB detection or robot target commands. The reaching demonstration commands a fixed approach point once per scene; it is **not** closed-loop visual servoing.
 
 ### Camera and geometry
 
@@ -75,21 +90,21 @@ The clean overhead reference camera is located at `(0, 0, 1.0)` m and points tow
 | **G — Minimum-depth selection** | RGB pixels within **1 mm of the minimum valid depth**; integer selected pixel; empirical `+1` vertical pixel offset | Median of selected depths | Fails if selected surface is empty |
 | **R — Robust surface estimator** | Depth median/MAD inliers; **continuous** inlier centroid; same `+1` vertical pixel offset | Median of inlier depths | Minimum **10** valid/inlier pixels and **50%** horizontal/vertical support spans |
 
-The `+1` vertical-pixel correction was found empirically when diagnosing the TinyRenderer projection/rasterization alignment; **it is not a general camera calibration rule**. A, G, and R are whole-pipeline configurations, so their comparisons do **not** isolate the effect of each individual component. Their parameters were frozen for the held-out Day 8 experiments.
+The `+1` vertical-pixel correction was found empirically when diagnosing the TinyRenderer projection/rasterization alignment; **it is not a general camera calibration rule**. A, G, and R are whole-pipeline configurations, so their comparisons do **not** isolate the effect of each individual component. Their parameters were frozen before the held-out evaluation.
 
-## Project development: Week 0–Day 8
+## Implementation milestones
 
-| Stage | Implementation / investigation | Outcome |
+| Component | Implementation / investigation | Outcome |
 |---|---|---|
-| **Week 0** | PyBullet scene, virtual camera, RGB/depth/segmentation rendering, metric depth, GT export | Reproducible synthetic RGB-D inputs |
-| **Day 1** | Camera intrinsic matrix and pixel-to-camera back-projection | Numerical geometry checks and tests |
-| **Day 2** | Optical, OpenGL-camera, and World coordinate transformations | End-to-end 3D back-projection and round-trip validation |
-| **Day 3** | RGB red-object masking and mask-based pixel selection | Object localization region extracted without GT segmentation |
-| **Day 4** | Single-pixel and median-neighborhood depth localization; missing-center recovery | Initial 3D object localization with depth-failure handling |
-| **Day 5** | Nine-position evaluation and error metrics | Initial localization error dataset |
-| **Day 6** | GT reprojection, segmentation alignment, side-face diagnosis, eight-variant ablation | Baseline 4.903 mm → method G 0.463 mm mean error on development scenes |
-| **Day 7** | Gaussian noise, random/patch dropout, robust method R, outcome classification | A/G/R depth-robustness benchmark and failure analysis |
-| **Day 8** | Held-out positions, four camera views, transferred corruption tests, surface-coverage and pixel-grid diagnostics | Generalization and remaining failure modes characterized |
+| Simulation foundation | PyBullet scene, virtual camera, RGB/depth/segmentation rendering, metric depth, GT export | Reproducible synthetic RGB-D inputs |
+| Camera geometry | Intrinsics, pixel back-projection, optical/OpenGL-camera/World transforms | Numerical and round-trip geometry validation |
+| Object detection | RGB red-object masking and mask-based pixel selection | Object localization region detected without GT segmentation |
+| Initial 3D localization | Single-pixel and neighborhood-median methods; nine positions | First quantitative localization benchmark |
+| Error diagnosis | GT reprojection, side-face/segmentation alignment, eight-variant ablation | A: 4.903 mm → G: 0.463 mm mean on development scenes |
+| Robust estimation | Gaussian noise, random/patch dropout, method R, outcome classification | Depth-robustness benchmark and failure analysis |
+| Generalization | 33 positions, four viewpoints, corruption-transfer tests, coverage and pixel-grid diagnostics | Localization performance and limitations characterized |
+| Robot integration | Panda URDF, robot frames, position-only FK/IK, joint control | Executable perception-driven reaching pipeline |
+| Single-scene reaching audit | EE trajectory, error decomposition, error-identity checks, failure gates | 2.182 mm final reaching error; reproducible report |
 
 ## Experimental results
 
@@ -128,7 +143,7 @@ Across all **132 clean scenes** (including 36 development-position scenes), **me
 
 [Inspect the selected-surface visualization](outputs/generalization_surface_selection.png)
 
-### 3. Depth robustness on the original development scenes (Day 7)
+### 3. Depth robustness on the original development scenes
 
 Before evaluating unseen scenes, the methods were compared on the original **nine overhead positions** under controlled synthetic depth corruption. The initial paired robustness benchmark covered **1,314 input scenarios** and **3,942 A/G/R evaluations**; these are **development-set** results, not held-out generalization evidence.
 
@@ -143,13 +158,13 @@ Before evaluating unseen scenes, the methods were compared on the original **nin
 
 For **80% random depth dropout**, R's mean error over returned estimates was **3.408 mm**, but **18.9%** of inputs yielded an inaccurate return (>5 mm), not a rejection. Under an **11×11 centered missing-depth patch**, R rejected all **nine** development scenes instead of returning a coordinate; a subsequent held-out test revealed more complex failures under changed viewpoints.
 
-[Gaussian noise comparison](outputs/robust_gaussian_error.png) · [Day 7 outcome classification](outputs/robust_localization_outcomes.png)
+[Gaussian noise comparison](outputs/robust_gaussian_error.png) · [Depth-robustness outcome classification](outputs/robust_localization_outcomes.png)
 
-### 4. Depth corruption transferred to unseen positions/viewpoints (Day 8)
+### 4. Depth corruption transferred to unseen positions/viewpoints
 
 A returned estimate is classified as **accurate** when its 3D error is **≤ 5 mm**, **inaccurate** when it is **> 5 mm**, or **rejected** when no valid coordinate is produced. All cases—including rejections—are in the denominators of these rates. Mean / P90 / maximum errors are computed **over returned estimates only**.
 
-The Day 8 transfer benchmark used **96 held-out position/viewpoint scenes**, seven corruption conditions, **4,128 input scenarios**, and **12,384 A/G/R evaluations**. Each corrupted RGB-D input was shared across the three methods; random corruptions used reproducible seeds.
+The held-out transfer benchmark used **96 held-out position/viewpoint scenes**, seven corruption conditions, **4,128 input scenarios**, and **12,384 A/G/R evaluations**. Each corrupted RGB-D input was shared across the three methods; random corruptions used reproducible seeds.
 
 **Method R, across all four camera views:**
 
@@ -173,42 +188,64 @@ The Day 8 transfer benchmark used **96 held-out position/viewpoint scenes**, sev
 
 [Surface-coverage failure comparison](outputs/generalization_patch_coverage_comparison.png) · [Overhead centroid/depth diagnostic](outputs/generalization_overhead_error_components.png) · [Pixel-phase analysis](outputs/generalization_overhead_pixel_phase.png)
 
+## Perception-driven robotic reaching
+
+The frozen method R estimates the cube's top-face center in World coordinates from the simulator's RGB-D camera. A **0.10 m World-Z approach offset** is applied before **position-only IK** and **joint-space position control** on a simulated Franka Panda robot. The end-effector reference is the Panda `panda_grasptarget` link frame.
+
+The robot receives **only perception-derived targets**. Simulator GT is read for the subsequent evaluation and to record cube displacement; it does not determine the commanded pose. Perception rejection or invalid IK prevents the controller from being called. Those rejection paths were verified in tests; their frequency under real corrupted reaching scenarios has not been measured.
+
+### Single-scene demonstration
+
+| Metric | Result |
+|---|---:|
+| Perception error | 0.620 mm |
+| IK-FK position error | 1.890 mm |
+| Control error (EE vs. commanded approach point) | 2.516 mm |
+| Final reaching error (EE vs. GT approach point) | **2.182 mm** |
+| Cube displacement | 0.016 mm |
+| Controller status | Converged |
+| Simulated time | 1.325 s (318 steps) |
+| Automated tests (full repository) | 119 passed |
+
+The three 3D error **vectors** satisfy the identity `e_reaching = e_perception + e_control`, while their Euclidean magnitudes do not generally add. The numerical results demonstrate **one successful clean-scene, open-loop perception-driven reach**, not a measured reaching success rate across different positions, cameras, or depth corruptions.
+
+### Reaching artifacts
+
+- [Integration report](reports/perception_driven_reaching_integration.md)
+- [Measured end-effector trajectory](outputs/robot_reaching/single_reach_trajectory_3d.png)
+- [Control error over simulated time](outputs/robot_reaching/single_reach_control_error.png)
+
 ## Repository structure
 
 ```text
 rgbd-perception-reaching/
 ├── src/
-│   ├── generate_rgbd_data.py             # Initial scene renderer
-│   ├── camera_geometry.py                # Intrinsics and coordinate transforms
-│   ├── object_perception.py              # RGB color mask and pixel selection
-│   ├── object_localization.py            # Initial depth-based localization
-│   ├── generate_trials.py                # Nine original positions
-│   ├── evaluate_trials.py                # Original nine-scene metrics
-│   ├── diagnose_projection.py            # GT reprojection diagnosis
-│   ├── run_ablation.py                   # Eight localization configurations
-│   ├── analyze_ablation.py               # Ablation summaries and plots
-│   ├── depth_corruption.py               # Gaussian noise and depth dropout
-│   ├── robust_localization.py            # Robust estimator R
-│   ├── evaluate_robust_methods.py        # Day 7 A/G/R benchmark
-│   ├── visualize_robustness.py           # Day 7 figures
-│   ├── generate_generalization_scenes.py # 33 positions × 4 viewpoints
-│   ├── evaluate_position_generalization.py
-│   ├── evaluate_viewpoint_generalization.py
+│   ├── generate_rgbd_data.py                # Initial RGB-D renderer
+│   ├── camera_geometry.py                   # Camera/World geometry
+│   ├── object_perception.py                 # RGB object detection
+│   ├── robust_localization.py               # Frozen method R
+│   ├── depth_corruption.py                  # Synthetic noise/dropout
+│   ├── generate_generalization_scenes.py    # Position/viewpoint data
 │   ├── evaluate_generalization_robustness.py
-│   ├── analyze_generalization.py
-│   ├── diagnose_surface_coverage.py
-│   └── diagnose_pixel_grid_bias.py
-├── tests/                                 # Unit and evaluation-invariant tests
+│   ├── robot_scene.py                       # Panda and RGB-D scene
+│   ├── robot_frames.py                      # Base/World target transforms
+│   ├── robot_kinematics.py                  # FK and IK validation
+│   ├── reaching_controller.py               # Joint-space position control
+│   ├── run_perception_reach.py              # Perception → IK → motors
+│   └── run_single_reach.py                  # Audit, plots, report
+├── tests/                                    # Localization & reaching tests
 ├── reports/
 │   ├── rgbd_localization_error_analysis.md
 │   ├── depth_robustness_evaluation.md
-│   └── localization_generalization_evaluation.md
-├── outputs/                               # Generated datasets, metrics, and plots
+│   ├── localization_generalization_evaluation.md
+│   └── perception_driven_reaching_integration.md
+├── outputs/
+│   └── robot_reaching/                      # Single-scene robot artifacts
 ├── pyproject.toml
 └── README.md
 ```
 
-This is a **selected file map**, not an exhaustive listing of all diagnostic scripts. The original scene data live in `outputs/trials/`; the newer 132-scene benchmark has a generated manifest under `outputs/generalization/position_viewpoint_benchmark/`.
+This is a **selected map**, not an exhaustive list of evaluation scripts. Original development scene arrays are generated in `outputs/trials/`; the 132-scene benchmark manifest is generated under `outputs/generalization/position_viewpoint_benchmark/`.
 
 ## Reproduction
 
@@ -226,18 +263,17 @@ uv sync
 
 Run commands from the **repository root**, in the order shown below. Rendering is CPU-based and does not require a graphical PyBullet window.
 
-### A. Initial RGB-D pipeline and development scenes (Week 0–Day 5)
+### A. Initial RGB-D pipeline and development scenes
 
 ```bash
 # Initial single scene (optional).
 uv run python -m src.generate_rgbd_data
-
 # Nine development scenes and their localization metrics.
 uv run python -m src.generate_trials
 uv run python -m src.evaluate_trials
 ```
 
-### B. Error diagnosis and ablation (Day 6)
+### B. Error diagnosis and ablation
 
 ```bash
 uv run python -m src.diagnose_projection
@@ -245,9 +281,9 @@ uv run python -m src.run_ablation
 uv run python -m src.analyze_ablation
 ```
 
-For the full range of camera-alignment and surface-geometry checks, see the diagnostic scripts and [Day 6 report](reports/rgbd_localization_error_analysis.md).
+For the full range of camera-alignment and surface-geometry checks, see the diagnostic scripts and [error-analysis report](reports/rgbd_localization_error_analysis.md).
 
-### C. Robustness benchmark (Day 7)
+### C. Robustness benchmark
 
 ```bash
 uv run python -m src.evaluate_gaussian_robustness
@@ -256,34 +292,44 @@ uv run python -m src.evaluate_robust_methods
 uv run python -m src.visualize_robustness
 ```
 
-### D. Held-out generalization and diagnostics (Day 8)
+### D. Held-out generalization and diagnostics
 
 **Important:** The original nine development scenes must exist before this stage; their overhead versions are **reused, not regenerated**.
 
 ```bash
 # Add 123 new scenes; assemble a manifest referencing 132 total scenes.
 uv run python -m src.generate_generalization_scenes
-
 # Clean position and camera-viewpoint evaluation.
 uv run python -m src.evaluate_position_generalization
 uv run python -m src.evaluate_viewpoint_generalization
-
 # Depth corruption transfer across held-out position/view combinations.
 uv run python -m src.evaluate_generalization_robustness
-
 # Generate failure-analysis plots and diagnostics.
 uv run python -m src.analyze_generalization
 uv run python -m src.diagnose_surface_coverage
 uv run python -m src.diagnose_pixel_grid_bias
 ```
 
-### E. Tests
+### E. Panda simulation and reaching demonstration
+
+```bash
+uv run python -m src.robot_scene
+uv run python -m src.robot_frames
+uv run python -m src.robot_kinematics
+uv run python -m src.reaching_controller
+uv run python -m src.run_perception_reach
+uv run python -m src.run_single_reach
+```
+
+The last two commands each run a single perception-driven reaching simulation; `src.run_single_reach` additionally saves plots and a Markdown report. No GPU or graphical PyBullet window is required.
+
+### F. Automated tests
 
 ```bash
 uv run python -m pytest -q
 ```
 
-**93 tests passed** in the completed local Day 8 run. Tests include camera geometry, missing-depth handling, paired-comparison integrity, output classification, reproducibility checks, and diagnostic invariants.
+**119 tests passed** in the completed local robot-integration run. Tests cover camera geometry, missing-depth handling, paired comparisons, localization outcomes, robot frames, FK/IK, joint control, rejection gates, and single-scene audit invariants.
 
 ### Generated artifacts
 
@@ -291,21 +337,26 @@ uv run python -m pytest -q
 - **Development benchmarks:** `outputs/localization_ablation.csv`, `outputs/robust_localization_benchmark.csv`, and associated summary/plot files.
 - **Generalization benchmarks:** `outputs/position_generalization_results.csv`, `outputs/viewpoint_generalization_results.csv`, `outputs/viewpoint_paired_deltas.csv`, and `outputs/generalization_robustness_results.csv`.
 - **Diagnostic outputs:** geometry, surface coverage, and pixel-grid CSVs, alongside PNG figures.
+- **Robot-reaching artifacts:** `outputs/robot_reaching/perception_reach_summary.json`, controller trajectory CSV, scene images, and 3D/error plots.
 
-Raw generated scenes under `outputs/trials/` and `outputs/generalization/` can be excluded from Git because the scripts regenerate them. The **source code, tests, reports, and selected result files** make the results auditable without checking in every rendered depth array.
+Raw generated scenes under `outputs/trials/` and `outputs/generalization/`, as well as robot-reaching sensor `.npy` arrays, may be excluded from Git because the scripts regenerate them. The **source code, tests, reports, and selected result files** make the results auditable without checking in every rendered depth array.
 
 ## Reports
 
-- **[RGB-D Localization Error Analysis](reports/rgbd_localization_error_analysis.md)** — systematic offsets, visible-side-face bias, and the initial ablation study (Day 6).
-- **[Depth Robustness Evaluation](reports/depth_robustness_evaluation.md)** — Gaussian noise, random/patch dropout, and the development of R (Day 7).
-- **[Generalization and Failure Analysis](reports/localization_generalization_evaluation.md)** — held-out positions, view changes, corruption transfer, coverage failures, and residual centroid error (Day 8).
+- [RGB-D Localization Error Analysis](reports/rgbd_localization_error_analysis.md) — systematic offsets, visible-side-face bias, and initial ablation study.
+- [Depth Robustness Evaluation](reports/depth_robustness_evaluation.md) — Gaussian noise, random/patch dropout, and method R development.
+- [Generalization and Failure Analysis](reports/localization_generalization_evaluation.md) — held-out positions, viewpoint changes, corruption transfer, coverage failures, and centroid error.
+- [Perception-Driven Reaching Integration](reports/perception_driven_reaching_integration.md) — Panda IK/control, one scene's reaching errors, trajectory, and limitations.
 
 ## Limitations and next steps
 
-This is a **simulation-only perception benchmark** with a single object shape and color, fixed imaging resolution, simplified depth corruption, and a small set of nearby camera poses. Repeated corrupted versions of one scene are **not independent new physical environments**. The selected `+1` pixel alignment adjustment and confidence thresholds are heuristic. None of the results establishes performance with real depth sensors, cluttered scenes, grasp planning, collision avoidance, or a physical robot.
+This is a **simulation-only** study using one red cube, controlled lighting, fixed image resolution, and nearby camera viewpoints. Localization was evaluated on 132 clean scenes and repeated corrupted inputs, but **robot reaching was demonstrated on only one clean overhead scene**. The observed 2.182 mm reaching error therefore cannot be interpreted as a general reaching accuracy or success rate.
 
-The next natural step is to **connect perception to simulated robot reaching**: supply the World-frame target to an inverse-kinematics controller and compare **oracle-target vs. perception-target** end-effector outcomes using matched scenes. Additional future work includes geometry-aware surface-support checks, calibrated confidence/uncertainty, varied objects, and real-sensor validation.
+The `+1` pixel correction and confidence thresholds are renderer-specific heuristics. Under severe dropout, method R sometimes returns inaccurate positions rather than rejecting them. The integrated rejection tests verify software gating, not safety or confidence calibration under physical sensing conditions. Joint-space interpolation does not guarantee a collision-free Cartesian path, and this work does not establish grasping ability, visual-servoing performance, real-sensor transfer, or safety on a physical robot.
+
+A possible extension is **paired multi-scene reaching evaluation** using the same A/G/R perception inputs, Panda IK, and controller, including synthetic depth corruption and explicit failure classifications. Other future work includes geometry-aware surface support, calibrated uncertainty, different objects, and real-sensor validation. These extensions are **not required to reproduce the completed single-scene proof of concept**.
 
 ---
 
-*Research/learning implementation; no claim of novel state-of-the-art performance or completed robotic reaching control.*
+*Research-oriented simulation implementation; no claim of novel state-of-the-art performance or physical-robot validation.*
+
